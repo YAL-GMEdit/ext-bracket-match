@@ -1,0 +1,5 @@
+{
+	"name": "ext-bracket-match",
+	"scripts": ["ext-bracket-match.js"],
+	"stylesheets": ["ext-bracket-match.css"]
+}
