@@ -37,6 +37,9 @@ function highlightBracketsHook() {
 		var start = iter.getCurrentTokenPosition();
 		start.column += tk.value.length - 1;
 		//
+		var mt = /\.(depth\d+)/.exec(tk.type);
+		var typeSuffix = mt ? " ace_" + mt[1] : "";
+		//
 		iter = new TokenIterator(session, cur.row, cur.column);
 		tk = iter.stepForward();
 		depth = 0;
@@ -61,23 +64,23 @@ function highlightBracketsHook() {
 			var range;
 			if (start.column > end.column) {
 				range = new Range(start.row, end.column, start.row, start.column);
-				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line", "text"));
+				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
 			} else if (start.column < end.column) {
 				range = new Range(start.row, start.column, start.row, end.column);
-				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line", "text"));
+				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
 			}
 			//
 			for (var i = leftRowTop; i <= leftRowBot; i++) {
 				range = new Range(i, leftCol, i, leftCol + 1);
-				hls.push(session.addMarker(range, "ace_bracket_left ace_bracket_line", "text", true));
+				hls.push(session.addMarker(range, "ace_bracket_left ace_bracket_line"+typeSuffix, "text", true));
 			}
 		} else if (start.column == end.column - 1) {
-			hls.push(session.addMarker(rangeFromPos(start, 2), "ace_bracket", "text"));
+			hls.push(session.addMarker(rangeFromPos(start, 2), "ace_bracket"+typeSuffix, "text"));
 			return;
 		}
 		//
-		hls.push(session.addMarker(rangeFromPos(start), "ace_bracket", "text"));
-		hls.push(session.addMarker(rangeFromPos(end), "ace_bracket", "text"));
+		hls.push(session.addMarker(rangeFromPos(start), "ace_bracket"+typeSuffix, "text"));
+		hls.push(session.addMarker(rangeFromPos(end), "ace_bracket"+typeSuffix, "text"));
 	}, 50);
 }
 function patchEditor(editor) {
