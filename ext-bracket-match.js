@@ -67,7 +67,7 @@ function highlightBracketsHook() {
 				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
 			} else if (startVis.column < endVis.column) {
 				range = new Range(end.row, session.screenToDocumentColumn(endVis.row, startVis.column), end.row, end.column);
-				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
+				hls.push(session.addMarker(range, "ace_bracket_top ace_bracket_line"+typeSuffix, "text"));
 			}
 			//
 			var lineVisCol = Math.min(startVis.column, endVis.column);
