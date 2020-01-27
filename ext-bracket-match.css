@@ -5,7 +5,7 @@
 	border-radius: 0;
 }
 .chrome-tabs-dark-theme .ace-tm .ace_marker-layer .ace_bracket_line {
-	border-color: #6272A4;
+	/*border-color: #6272A4;*/ /*192,192,192 doesn't look too bad on dark themes?*/
 }
 .ace-tm .ace_marker-layer .ace_bracket_left {
 	border-left-width: 1px;

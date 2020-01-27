@@ -58,21 +58,22 @@ function highlightBracketsHook() {
 		var hls = session.$bracketHighlights;
 		if (hls == null) session.$bracketHighlights = hls = [];
 		//
-		var leftCol = Math.min(start.column, end.column);
-		var leftRowTop = start.row + 1, leftRowBot = end.row - 1;
+		var startVis = session.documentToScreenPosition(start.row, start.column);
+		var   endVis = session.documentToScreenPosition(  end.row,   end.column);
 		if (start.row != end.row) {
-			var range;
-			if (start.column > end.column) {
-				range = new Range(start.row, end.column, start.row, start.column);
+			var range, vis;
+			if (startVis.column > endVis.column) {
+				range = new Range(start.row, session.screenToDocumentColumn(startVis.row, endVis.column), start.row, start.column);
 				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
-			} else if (start.column < end.column) {
-				range = new Range(start.row, start.column, start.row, end.column);
+			} else if (startVis.column < endVis.column) {
+				range = new Range(end.row, session.screenToDocumentColumn(endVis.row, startVis.column), end.row, end.column);
 				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
 			}
 			//
-			for (var i = leftRowTop; i <= leftRowBot; i++) {
-				range = new Range(i, leftCol, i, leftCol + 1);
-				hls.push(session.addMarker(range, "ace_bracket_left ace_bracket_line"+typeSuffix, "text", true));
+			var lineVisCol = Math.min(startVis.column, endVis.column);
+			for (var i = startVis.row + 1; i <= endVis.row - 1; i++) {
+				var iPosVis = session.screenToDocumentPosition(i, lineVisCol);
+				hls.push(session.addMarker(rangeFromPos(iPosVis), "ace_bracket_left ace_bracket_line"+typeSuffix, "line", true));
 			}
 		} else if (start.column == end.column - 1) {
 			hls.push(session.addMarker(rangeFromPos(start, 2), "ace_bracket"+typeSuffix, "text"));
@@ -91,6 +92,9 @@ GMEdit.register("ext-bracket-match", {
 		TokenIterator = ace.require("ace/token_iterator").TokenIterator;
 		Range = ace.require("ace/range").Range;
 		patchEditor(window.aceEditor);
+		GMEdit.on("editorCreated", function(e) {
+			patchEditor(e.editor);
+		});
 	},
 	cleanup: function() {}
 });

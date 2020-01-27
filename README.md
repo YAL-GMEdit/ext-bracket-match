@@ -18,3 +18,5 @@ If your theme implements rainbow brackets, you can do that too, like so:
 	border-color: #C6FF79;
 }
 ```
+
+[Install instructions](https://github.com/GameMakerDiscord/GMEdit/wiki/Using-plugins#installing-plugins)
