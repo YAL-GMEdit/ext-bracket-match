@@ -41,6 +41,7 @@ function highlightBracketsHook() {
 		var typeSuffix = mt ? " ace_" + mt[1] : "";
 		//
 		iter = new TokenIterator(session, cur.row, cur.column);
+		var beforeEnd = iter.getCurrentToken();
 		tk = iter.stepForward();
 		depth = 0;
 		while (tk) {
@@ -50,6 +51,7 @@ function highlightBracketsHook() {
 				depth -= tk.value.length;
 				if (depth < 0) break;
 			}
+			beforeEnd = tk; 
 			tk = iter.stepForward();
 		}
 		if (!tk) return;
@@ -63,6 +65,11 @@ function highlightBracketsHook() {
 		if (start.row != end.row) {
 			var range, vis;
 			if (startVis.column > endVis.column) {
+				if (beforeEnd.type.includes("string")) {
+					endVis.column -= 1;
+					range = new Range(end.row, session.screenToDocumentColumn(endVis.row, endVis.column), end.row, end.column);
+					hls.push(session.addMarker(range, "ace_bracket_top ace_bracket_line"+typeSuffix, "text"));
+				}
 				range = new Range(start.row, session.screenToDocumentColumn(startVis.row, endVis.column), start.row, start.column);
 				hls.push(session.addMarker(range, "ace_bracket_bottom ace_bracket_line"+typeSuffix, "text"));
 			} else if (startVis.column < endVis.column) {
